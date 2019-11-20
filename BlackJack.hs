@@ -17,7 +17,7 @@ implementation = Interface
 main :: IO ()
 main = runGame implementation
 
--- AX
+-- Part A 
 
 hand2 = Add (Card (Numeric 2) Hearts)
     (Add (Card Jack Spades) Empty)
@@ -66,7 +66,9 @@ winner g b | gameOver g = Bank
            | value b >= value g = Bank
            | otherwise         = Guest
 
--- BX..
+-- End Part A 
+
+-- Part B..
 
 --B1
 --Given two hands, <+ puts the first one on top of the second one:
@@ -85,9 +87,11 @@ prop_size_onTopOf :: Hand -> Hand -> Bool
 prop_size_onTopOf h1 h2 = size h1 + size h2 == size (h1 <+ h2)
 
 --B2
+-- Help function to fullDeck. Generates a list of Rank-suit-pairs. 
 fullList :: [(Rank,Suit)]
 fullList = [(rank,suit) | rank <-([Numeric n | n <- [2..10]] ++ [Jack,Queen,King,Ace])
                         , suit <- [Hearts, Spades , Diamonds , Clubs]]
+-- Outputs a full deck of 52 cards. 
 fullDeck :: Hand
 fullDeck = foldr (<+) Empty deck
   where
@@ -101,6 +105,8 @@ draw Empty _ = error"draw: The deck is empty."
 draw (Add drawCard restOfDeck) h = (restOfDeck, (Add drawCard Empty) <+ h)
 
 --B4
+-- Given a deck, play for the bank according to the rules (starting with an empty hand),
+-- and return the bank’s final hand. 
 playBank :: Hand -> Hand
 playBank deck = playBankHelper deck Empty
 
@@ -144,6 +150,6 @@ c `belongsTo` Empty = False
 c `belongsTo` (Add c' h) = c == c' || c `belongsTo` h
 
 prop_size_shuffle :: StdGen -> Hand -> Bool
-prop_size_shuffle g h = size h == size (shuffleDeck g h)
+prop_size_shuffle g h = size h == size (shuffleDeck g h) 
 
 
