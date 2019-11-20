@@ -78,6 +78,7 @@ e <+ Empty = e
 Empty <+ e = e
 (Add c h) <+ h2 = (Add c (h <+ h2))
 
+-- PropTests of (<+)
 prop_onTopOf_assoc :: Hand -> Hand -> Hand -> Bool
 prop_onTopOf_assoc p1 p2 p3 = 
     p1<+(p2<+p3) == (p1<+p2)<+p3
@@ -147,6 +148,5 @@ c `belongsTo` (Add c' h) = c == c' || c `belongsTo` h
 
 prop_size_shuffle :: StdGen -> Hand -> Bool
 prop_size_shuffle g h = size h == size (shuffleDeck g h)
-
 
 
