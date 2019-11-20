@@ -61,13 +61,10 @@ gameOver Empty = False
 gameOver (Add c h) | value (Add c h) > 21 = True
                    | otherwise         = False
 
-winner :: Hand -> Hand -> Player
-winner Empty _ = error "Empty hand"
-winner _ Empty = error "Empty hand"
-winner (Add gc gh) (Add bc bh) | gameOver(Add gc gh) = Bank
-                               | gameOver (Add bc bh) = Guest
-                               | value(Add bc bh) >= value(Add gc gh) = Bank
-                               | otherwise         = Guest
+winner g b | gameOver g = Bank
+           | gameOver b = Guest
+           | value b >= value g = Bank
+           | otherwise         = Guest
 
 -- BX..
 
