@@ -4,6 +4,7 @@ import Test.QuickCheck
 import Data.Char
 import System.Random
 import Test.QuickCheck.Gen
+import Data.List
 
 ------------------------------------------------------------------------------
 
@@ -148,22 +149,41 @@ isOkayBlock ((Nothing):cs)| length cs > 0 = isOkayBlock cs
 
 -- * D2
 
-exBlock1 = [Just 1, Just 7, Nothing, Nothing, Just 3, Nothing, Nothing, Nothing, Just 2]
-
-exBlock2 = [Just 1, Just 7, Nothing, Just 7, Just 3, Nothing, Nothing, Nothing, Just 2]
-
 blocks :: Sudoku -> [Block]
-blocks = undefined
---(Sudoku (rs)) = [r | r <- (take 9 (rs))] ++ [colBlocks]
---                    where colBlocks = take 1 (take 1 rs) 
+blocks s = rowBlocks s' ++ columnBlocks s' ++ squareBlockOne s'
+  ++ squareBlockTwo s' ++ squareBlockThree s'
+    where s' = rows s
 
+rowBlocks :: [Row] -> [Block]
+rowBlocks r = r
+
+columnBlocks :: [Row] -> [Block]
+columnBlocks c = transpose c
+
+squareBlockOne :: [[Maybe Int]] -> [[Maybe Int]]
+squareBlockOne [] = []
+squareBlockOne (x1:x2:x3:xs) = ((take 3 x1) ++ (take 3 x2)
+                               ++ (take 3 x3)) : squareBlockOne xs
+
+squareBlockTwo :: [[Maybe Int]] -> [[Maybe Int]]
+squareBlockTwo [] = []
+squareBlockTwo (x1:x2:x3:xs) = ((take 3 (drop 3 x1)) ++ (take 3 (drop 3 x2))
+                               ++ (take 3 (drop 3 x3))) : squareBlockTwo xs
+
+squareBlockThree :: [[Maybe Int]] -> [[Maybe Int]]
+squareBlockThree [] = []
+squareBlockThree (x1:x2:x3:xs) = ((take 3 (drop 6 x1)) ++ (take 3 (drop 6 x2))
+                                 ++ (take 3 (drop 6 x3))) : squareBlockThree xs
+
+-- Props for blocks (D2)
 prop_blocks_lengths :: Sudoku -> Bool
-prop_blocks_lengths = undefined
+prop_blocks_lengths s = length (blocks s) == 27
+
 
 -- * D3
 
 isOkay :: Sudoku -> Bool
-isOkay = undefined
+isOkay s = and[isOkayBlock b | b <- blocks s] 
 
 
 ---- Part A ends here --------------------------------------------------------
