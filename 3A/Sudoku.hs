@@ -115,22 +115,19 @@ cell = frequency[(1, nums), (3, noNum)]
         nums = elements [Just n | n <- [1..9]]
         noNum = elements[Nothing]
 
-
-
-                 
-
 -- * C2
-
 -- | an instance for generating Arbitrary Sudokus
-instance Arbitrary Sudoku where
-  arbitrary = undefined
-
- -- hint: get to know the QuickCheck function vectorOf
+instance Arbitrary Sudoku where 
+     arbitrary = do
+                    r <- vectorOf 9 $ vectorOf 9 cell
+                    return (Sudoku r)
+-- hint: get to know the QuickCheck function vectorOf
  
 -- * C3
 
 prop_Sudoku :: Sudoku -> Bool
-prop_Sudoku = undefined
+prop_Sudoku s = isSudoku s
+
   -- hint: this definition is simple!
   
 ------------------------------------------------------------------------------
@@ -141,13 +138,24 @@ type Block = [Cell] -- a Row is also a Cell
 -- * D1
 
 isOkayBlock :: Block -> Bool
-isOkayBlock = undefined
+isOkayBlock ((Just c):cs) | length cs > 0 = not(Just c `elem` cs) && isOkayBlock cs
+                          | otherwise = not(Just c `elem` cs)
+isOkayBlock ((Nothing):cs)| length cs > 0 = isOkayBlock cs
+                          | otherwise = True
+
+
 
 
 -- * D2
 
+exBlock1 = [Just 1, Just 7, Nothing, Nothing, Just 3, Nothing, Nothing, Nothing, Just 2]
+
+exBlock2 = [Just 1, Just 7, Nothing, Just 7, Just 3, Nothing, Nothing, Nothing, Just 2]
+
 blocks :: Sudoku -> [Block]
 blocks = undefined
+--(Sudoku (rs)) = [r | r <- (take 9 (rs))] ++ [colBlocks]
+--                    where colBlocks = take 1 (take 1 rs) 
 
 prop_blocks_lengths :: Sudoku -> Bool
 prop_blocks_lengths = undefined
