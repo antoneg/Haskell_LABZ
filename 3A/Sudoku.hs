@@ -110,8 +110,10 @@ readSudoku f =
 
 -- | cell generates an arbitrary cell in a Sudoku
 cell :: Gen (Cell)
-cell = elements [if (choose (1, 100)) == 1 then Just n else Nothing | n <- [1..9]]
-
+cell = frequency[(1, nums), (3, noNum)]
+     where
+        nums = elements [Just n | n <- [1..9]]
+        noNum = elements[Nothing]
 
 
 
