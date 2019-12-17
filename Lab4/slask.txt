@@ -1,0 +1,51 @@
+element input # set value
+
+simplify :: Expr -> Expr
+
+-- AAAAAAAAAADD
+simplify (Add (Num n1) (Num n2)) = (Num (n1 + n2))
+
+simplify (Add (Num n) Var) = (Add (Num n) Var)
+simplify (Add Var (Num n)) = (Add Var (Num n))
+
+simplify (Add (Num n1) (Mul (Num n2) Var)) = (Add (Num n1) (Mul (Num n2) Var))
+simplify (Add (Mul (Num n2) Var) (Num n1)) = (Add (Mul (Num n2) Var) (Num n1))
+
+simplify (Add Var e) = (Add Var (simplify e))
+simplify (Add e Var) = (Add (simplify e) Var)
+--simplify (Add e (Var)) = (Add (simplify e) Var)
+--simplify (Add (Var) e ) = (Add Var (simplify e))
+simplify (Add e1 e2) = simplify (Add(simplify e1) (simplify e2))
+
+-- MUUUUUUUUUL
+
+simplify (Mul (Num n1) (Num n2)) = (Num (n1 * n2))
+
+simplify (Mul (Num n) Var) = (Mul (Num n) Var)
+simplify (Mul Var (Num n)) = (Mul Var (Num n))
+
+simplify (Mul (Num n1) (Add (Num n2) Var)) = (Mul (Num n1) (Add (Num n2) Var))
+simplify (Mul (Add (Num n2) Var) (Num n1)) = (Mul (Add (Num n2) Var) (Num n1))
+
+simplify (Mul Var e) = (Mul Var (simplify e))
+simplify (Mul e Var) = (Mul (simplify e) Var)
+--simplify (Mul e (Var)) = (Mul (simplify e) Var)
+--simplify (Mul (Var) e ) = (Mul Var (simplify e))
+simplify (Mul e1 e2) = simplify (Mul (simplify e1) (simplify e2))
+
+-- SIIIIIIIIIN
+
+
+simplify (Sin (Num n)) = (Sin (Num n))
+simplify (Sin (Var)) = (Sin (Var))
+simplify (Sin (Mul Var (Num n))) = (Sin (Mul Var (Num n)))
+simplify (Sin (Mul (Num n) Var)) = (Sin (Mul (Num n) Var))
+simplify (Sin (Add Var (Num n))) = (Sin (Add Var (Num n)))
+simplify (Sin (Add (Num n) Var)) = (Sin (Add (Num n) Var))
+simplify (Sin e) = (Sin (simplify e))
+
+simplify (Cos (Num n)) = (Num $ cos n)
+simplify (Cos e) = (Cos (simplify e))
+
+simplify (Num n) = Num n
+simplify Var = Var
